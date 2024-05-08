@@ -1,3 +1,5 @@
+package main;
+
 import javax.swing.JFrame;
 
 public class App {
@@ -13,5 +15,6 @@ public class App {
 
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+        gp.launchGame();
     }
 }

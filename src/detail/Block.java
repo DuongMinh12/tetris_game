@@ -4,12 +4,12 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
-public class MiniBlock extends Rectangle {
+public class Block extends Rectangle {
     public int x, y;
     public static final int size = 30;
     public Color c;
 
-    public MiniBlock(Color c) {
+    public Block(Color c) {
         this.c = c;
     }
 
