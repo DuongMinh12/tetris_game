@@ -4,7 +4,7 @@ import java.awt.Color;
 
 public class Brick_Square extends Brick {
     public Brick_Square() {
-        create(Color.yellow);
+        create(Color.PINK);
     }
 
     public void setXY(int x, int y) {
@@ -17,7 +17,7 @@ public class Brick_Square extends Brick {
         b[1].y = b[0].y + Block.size;
         b[2].x = b[0].x + Block.size;
         b[2].y = b[0].y;
-        b[3].x = b[0].x - Block.size;
+        b[3].x = b[0].x + Block.size;
         b[3].y = b[0].y + Block.size;
     }
 

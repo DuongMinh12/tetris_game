@@ -11,6 +11,8 @@ public class Brick {
     public int direction = 1;
     boolean leftCollision, rightCollision, bottomCollison;
     public boolean active = true;
+    public boolean deactivating;
+    int deactivatingCounter = 0;
 
     public void create(Color c) {
         b[0] = new Block(c);
@@ -55,10 +57,12 @@ public class Brick {
     public void getDirection_4() {
     }
 
+    // check collision
     public void checkMovementCollision() {
         leftCollision = false;
         rightCollision = false;
         bottomCollison = false;
+        checkStaticBlockCollision();
         // check frame collision
         for (int i = 0; i < b.length; i++) {
             if (b[i].x == PlayManager.left_x) {
@@ -81,6 +85,7 @@ public class Brick {
         leftCollision = false;
         rightCollision = false;
         bottomCollison = false;
+        checkStaticBlockCollision();
         // check frame collision
         for (int i = 0; i < b.length; i++) {
             if (tempB[i].x < PlayManager.left_x) {
@@ -99,8 +104,44 @@ public class Brick {
         }
     }
 
+    private void checkStaticBlockCollision() {
+        for (int i = 0; i < PlayManager.staticBlocks.size(); i++) {
+            int target_x = PlayManager.staticBlocks.get(i).x;
+            int target_y = PlayManager.staticBlocks.get(i).y;
+            for (int j = 0; j < b.length; j++) {
+                if (b[j].y + Block.size == target_y && b[j].x == target_x) {
+                    bottomCollison = true;
+                }
+            }
+            for (int j = 0; j < b.length; j++) {
+                if (b[j].x - Block.size == target_x && b[j].y == target_y) {
+                    leftCollision = true;
+                }
+            }
+            for (int j = 0; j < b.length; j++) {
+                if (b[j].x + Block.size == target_x && b[j].y == target_y) {
+                    rightCollision = true;
+                }
+            }
+        }
+    }
+
+    private void counterDeactivating() {
+        deactivatingCounter++;
+        if (deactivatingCounter == 45) {
+            deactivatingCounter = 0;
+            checkMovementCollision();
+            if (bottomCollison) {
+                active = false;
+            }
+        }
+    }
+
     // update and draw
     public void update() {
+        if (deactivating) {
+            counterDeactivating();
+        }
         if (KeyHandle.upPressed) {
             switch (direction) {
                 case 1:
@@ -151,7 +192,7 @@ public class Brick {
             KeyHandle.rightPressed = false;
         }
         if (bottomCollison) {
-            active = false;
+            deactivating = true;
         } else {
             autoDropCounter++;
 

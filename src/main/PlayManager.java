@@ -84,6 +84,38 @@ public class PlayManager {
         return brick;
     }
 
+    private void checkDelete() {
+        int x = left_x;
+        int y = top_y;
+        int blockCount = 0;
+        while (x < right_x && y < bottom_y) {
+            for (int i = 0; i < staticBlocks.size(); i++) {
+                if (staticBlocks.get(i).x == x && staticBlocks.get(i).y == y) {
+                    blockCount++;
+                }
+            }
+
+            x += Block.size;
+            if (x == right_x) {
+                if (blockCount == 12) {
+                    for (int i = staticBlocks.size() - 1; i > -1; i--) {
+                        if (staticBlocks.get(i).y == y) {
+                            staticBlocks.remove(i);
+                        }
+                    }
+                    for (int i = 0; i < staticBlocks.size(); i++) {
+                        if (staticBlocks.get(i).y < y) {
+                            staticBlocks.get(i).y += Block.size;
+                        }
+                    }
+                }
+                blockCount = 0;
+                x = left_x;
+                y += Block.size;
+            }
+        }
+    }
+
     public void update() {
         if (currentBrick.active == false) {
             staticBlocks.add(currentBrick.b[0]);
@@ -91,10 +123,14 @@ public class PlayManager {
             staticBlocks.add(currentBrick.b[2]);
             staticBlocks.add(currentBrick.b[3]);
 
+            currentBrick.deactivating = false;
+
             currentBrick = nextBrick;
             currentBrick.setXY(brick_start_x, brick_start_y);
             nextBrick = pickBrick();
             nextBrick.setXY(nextBrick_x, nextBrick_y);
+
+            checkDelete();
         } else {
             currentBrick.update();
         }
