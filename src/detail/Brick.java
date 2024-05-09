@@ -8,6 +8,9 @@ public class Brick {
     public Block b[] = new Block[4];
     public Block tempB[] = new Block[4];
     int autoDropCounter = 0;
+    public int direction = 1;
+    boolean leftCollision, rightCollision, bottomCollison;
+    public boolean active = true;
 
     public void create(Color c) {
         b[0] = new Block(c);
@@ -24,18 +27,143 @@ public class Brick {
     };
 
     public void updateXY(int direction) {
+        checkRotationCollision();
+        if (leftCollision == false && rightCollision == false && bottomCollison == false) {
+            this.direction = direction;
+            b[0].x = tempB[0].x;
+            b[0].y = tempB[0].y;
+            b[1].x = tempB[1].x;
+            b[1].y = tempB[1].y;
+            b[2].x = tempB[2].x;
+            b[2].y = tempB[2].y;
+            b[3].x = tempB[3].x;
+            b[3].y = tempB[3].y;
+        }
+
     };
 
-    public void update() {
-        autoDropCounter++;
+    // direction
+    public void getDirection_1() {
+    }
 
-        if (autoDropCounter == PlayManager.dropInterval) {
-            b[0].y += Block.size;
-            b[1].y += Block.size;
-            b[2].y += Block.size;
-            b[3].y += Block.size;
-            autoDropCounter = 0;
+    public void getDirection_2() {
+    }
+
+    public void getDirection_3() {
+    }
+
+    public void getDirection_4() {
+    }
+
+    public void checkMovementCollision() {
+        leftCollision = false;
+        rightCollision = false;
+        bottomCollison = false;
+        // check frame collision
+        for (int i = 0; i < b.length; i++) {
+            if (b[i].x == PlayManager.left_x) {
+                leftCollision = true;
+            }
         }
+        for (int i = 0; i < b.length; i++) {
+            if (b[i].x + Block.size == PlayManager.right_x) {
+                rightCollision = true;
+            }
+        }
+        for (int i = 0; i < b.length; i++) {
+            if (b[i].y + Block.size == PlayManager.bottom_y) {
+                bottomCollison = true;
+            }
+        }
+    }
+
+    public void checkRotationCollision() {
+        leftCollision = false;
+        rightCollision = false;
+        bottomCollison = false;
+        // check frame collision
+        for (int i = 0; i < b.length; i++) {
+            if (tempB[i].x < PlayManager.left_x) {
+                leftCollision = true;
+            }
+        }
+        for (int i = 0; i < b.length; i++) {
+            if (tempB[i].x + Block.size > PlayManager.right_x) {
+                rightCollision = true;
+            }
+        }
+        for (int i = 0; i < b.length; i++) {
+            if (tempB[i].y + Block.size > PlayManager.bottom_y) {
+                bottomCollison = true;
+            }
+        }
+    }
+
+    // update and draw
+    public void update() {
+        if (KeyHandle.upPressed) {
+            switch (direction) {
+                case 1:
+                    getDirection_2();
+                    break;
+                case 2:
+                    getDirection_3();
+                    break;
+                case 3:
+                    getDirection_4();
+                    break;
+                case 4:
+                    getDirection_1();
+                    break;
+            }
+            KeyHandle.upPressed = false;
+        }
+
+        checkMovementCollision();
+
+        if (KeyHandle.downPressed) {
+            if (bottomCollison == false) {
+                b[0].y += Block.size;
+                b[1].y += Block.size;
+                b[2].y += Block.size;
+                b[3].y += Block.size;
+                autoDropCounter = 0;
+
+            }
+            KeyHandle.downPressed = false;
+        }
+        if (KeyHandle.leftPressed) {
+            if (leftCollision == false) {
+                b[0].x -= Block.size;
+                b[1].x -= Block.size;
+                b[2].x -= Block.size;
+                b[3].x -= Block.size;
+            }
+            KeyHandle.leftPressed = false;
+        }
+        if (KeyHandle.rightPressed) {
+            if (rightCollision == false) {
+                b[0].x += Block.size;
+                b[1].x += Block.size;
+                b[2].x += Block.size;
+                b[3].x += Block.size;
+            }
+            KeyHandle.rightPressed = false;
+        }
+        if (bottomCollison) {
+            active = false;
+        } else {
+            autoDropCounter++;
+
+            if (autoDropCounter == PlayManager.dropInterval) {
+                b[0].y += Block.size;
+                b[1].y += Block.size;
+                b[2].y += Block.size;
+                b[3].y += Block.size;
+                autoDropCounter = 0;
+            }
+        }
+
     };
 
     public void draw(Graphics2D g2) {

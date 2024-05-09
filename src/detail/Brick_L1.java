@@ -1,7 +1,6 @@
 package detail;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 
 public class Brick_L1 extends Brick {
     public Brick_L1() {
@@ -26,21 +25,64 @@ public class Brick_L1 extends Brick {
         b[3].y = b[0].y + Block.size;
     }
 
-    // @Override
-    // public void updateXY(int direction) {
-    // // TODO Auto-generated method stub
-    // throw new UnsupportedOperationException("Unimplemented method 'updateXY'");
-    // }
+    public void getDirection_1() {
+        // 0
+        // 0
+        // 0 0
+        tempB[0].x = b[0].x;
+        tempB[0].y = b[0].y;
+        tempB[1].x = b[0].x;
+        tempB[1].y = b[0].y - Block.size;
+        tempB[2].x = b[0].x;
+        tempB[2].y = b[0].y + Block.size;
+        tempB[3].x = b[0].x + Block.size;
+        tempB[3].y = b[0].y + Block.size;
+        updateXY(1);
+    }
 
-    // @Override
-    // public void update() {
-    // // TODO Auto-generated method stub
-    // throw new UnsupportedOperationException("Unimplemented method 'update'");
-    // }
+    public void getDirection_2() {
+        //
+        // 0 0 0
+        // 0
 
-    // @Override
-    // public void draw(Graphics2D g2) {
-    // // TODO Auto-generated method stub
-    // throw new UnsupportedOperationException("Unimplemented method 'draw'");
-    // }
+        tempB[0].x = b[0].x;
+        tempB[0].y = b[0].y;
+        tempB[1].x = b[0].x + Block.size;
+        tempB[1].y = b[0].y;
+        tempB[2].x = b[0].x - Block.size;
+        tempB[2].y = b[0].y;
+        tempB[3].x = b[0].x - Block.size;
+        tempB[3].y = b[0].y + Block.size;
+        updateXY(2);
+    }
+
+    public void getDirection_3() {
+        // 0 0
+        //// 0
+        //// 0
+        tempB[0].x = b[0].x;
+        tempB[0].y = b[0].y;
+        tempB[1].x = b[0].x;
+        tempB[1].y = b[0].y + Block.size;
+        tempB[2].x = b[0].x;
+        tempB[2].y = b[0].y - Block.size;
+        tempB[3].x = b[0].x - Block.size;
+        tempB[3].y = b[0].y - Block.size;
+        updateXY(3);
+    }
+
+    public void getDirection_4() {
+        ////// 0
+        // 0 0 0
+        //
+        tempB[0].x = b[0].x;
+        tempB[0].y = b[0].y;
+        tempB[1].x = b[0].x - Block.size;
+        tempB[1].y = b[0].y;
+        tempB[2].x = b[0].x + Block.size;
+        tempB[2].y = b[0].y;
+        tempB[3].x = b[0].x + Block.size;
+        tempB[3].y = b[0].y - Block.size;
+        updateXY(4);
+    }
 }
