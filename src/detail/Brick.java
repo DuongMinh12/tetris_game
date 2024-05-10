@@ -158,6 +158,7 @@ public class Brick {
                     break;
             }
             KeyHandle.upPressed = false;
+            GamePanel.se.playMusic(3, false);
         }
 
         checkMovementCollision();
@@ -192,6 +193,9 @@ public class Brick {
             KeyHandle.rightPressed = false;
         }
         if (bottomCollison) {
+            if (deactivating == false) {
+                GamePanel.se.playMusic(4, false);
+            }
             deactivating = true;
         } else {
             autoDropCounter++;

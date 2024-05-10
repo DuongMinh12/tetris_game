@@ -36,6 +36,17 @@ public class PlayManager {
     public static ArrayList<Block> staticBlocks = new ArrayList<>();
 
     public static int dropInterval = 60;
+    boolean gameOver;
+
+    // effect
+    boolean effectCounterOn;
+    int effectCounter;
+    ArrayList<Integer> effectY = new ArrayList<>();
+
+    // level and score
+    int level = 1;
+    int score;
+    int line;
 
     public PlayManager() {
         left_x = (GamePanel.width / 2) - (width / 2);
@@ -88,6 +99,8 @@ public class PlayManager {
         int x = left_x;
         int y = top_y;
         int blockCount = 0;
+        int lineCount = 0;
+
         while (x < right_x && y < bottom_y) {
             for (int i = 0; i < staticBlocks.size(); i++) {
                 if (staticBlocks.get(i).x == x && staticBlocks.get(i).y == y) {
@@ -98,9 +111,21 @@ public class PlayManager {
             x += Block.size;
             if (x == right_x) {
                 if (blockCount == 12) {
+                    effectCounterOn = true;
+                    effectY.add(y);
                     for (int i = staticBlocks.size() - 1; i > -1; i--) {
                         if (staticBlocks.get(i).y == y) {
                             staticBlocks.remove(i);
+                        }
+                    }
+                    lineCount++;
+                    line++;
+                    if (line % 10 == 0 && dropInterval > 1) {
+                        level++;
+                        if (dropInterval > 10) {
+                            dropInterval -= 10;
+                        } else {
+                            dropInterval -= 1;
                         }
                     }
                     for (int i = 0; i < staticBlocks.size(); i++) {
@@ -114,6 +139,12 @@ public class PlayManager {
                 y += Block.size;
             }
         }
+
+        if (lineCount > 0) {
+            GamePanel.se.playMusic(1, false);
+            int singleLineScore = 10 * level;
+            score += singleLineScore * lineCount;
+        }
     }
 
     public void update() {
@@ -122,6 +153,13 @@ public class PlayManager {
             staticBlocks.add(currentBrick.b[1]);
             staticBlocks.add(currentBrick.b[2]);
             staticBlocks.add(currentBrick.b[3]);
+
+            // if game over
+            if (currentBrick.b[0].x == brick_start_x && currentBrick.b[0].y == brick_start_y) {
+                gameOver = true;
+                GamePanel.music.stop();
+                GamePanel.se.playMusic(2, false);
+            }
 
             currentBrick.deactivating = false;
 
@@ -150,6 +188,14 @@ public class PlayManager {
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.drawString("NEXT", x + 60, y + 35);
 
+        // score frame
+        g2.drawRect(x, top_y, 250, 250);
+        x += 30;
+        y = top_y + 65;
+        g2.drawString("LEVEL: " + level, x, y);
+        g2.drawString("SCORE: " + score, x, y + 70);
+        g2.drawString("LINE: " + line, x, y + 140);
+
         if (currentBrick != null) {
             currentBrick.draw(g2);
         }
@@ -159,12 +205,40 @@ public class PlayManager {
             staticBlocks.get(i).draw(g2);
         }
 
+        // draw effect
+        if (effectCounterOn) {
+            effectCounter++;
+            g2.setColor(Color.red);
+            for (int i = 0; i < effectY.size(); i++) {
+                g2.fillRect(left_x, effectY.get(i), width, Block.size);
+            }
+            if (effectCounter == 10) {
+                effectCounterOn = false;
+                effectCounter = 0;
+                effectY.clear();
+            }
+        }
+
         g2.setColor(Color.yellow);
         g2.setFont(g2.getFont().deriveFont(50f));
-        if (KeyHandle.pausePressed) {
+
+        if (gameOver) {
+            // draw game over
+            x = left_x + 25;
+            y = top_y + 320;
+            g2.drawString("GAME OVER", x, y);
+        } else if (KeyHandle.pausePressed) {
+            // draw paused
             x = left_x + 70;
             y = top_y + 320;
             g2.drawString("PAUSED", x, y);
         }
+
+        // draw game title
+        x = 35;
+        y = top_y + 320;
+        g2.setColor(Color.white);
+        g2.setFont(new Font("Time New Roman", Font.PLAIN, 60));
+        g2.drawString("Simple Tetris", x + 20, y);
     }
 }
