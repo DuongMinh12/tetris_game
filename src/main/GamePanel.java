@@ -22,7 +22,6 @@ public class GamePanel extends JPanel implements Runnable {
         this.setLayout(null);
         this.addKeyListener(new KeyHandle());
         this.setFocusable(true);
-ưu tiên tối đat
         pm = new PlayManager();
     }
 
