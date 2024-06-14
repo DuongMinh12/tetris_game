@@ -238,6 +238,7 @@ public class PlayManager {
             debuffManager.handleObstacleCollision();
         }
         if (KeyHandle.resetPressed) {
+            int respone = 0;
             initializeGame();
             KeyHandle.resetPressed = false;
         }
