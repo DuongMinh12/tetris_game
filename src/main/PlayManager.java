@@ -180,34 +180,145 @@ public class PlayManager {
         }
     }
 
+    // public void draw(Graphics2D g2) {
+    // g2.setColor(Color.white);
+    // g2.setStroke(new BasicStroke(4f));
+    // g2.drawRect(left_x - 4, top_y - 4, width + 8, height + 8);
+
+    // int x = right_x + 100;
+    // int y = bottom_y - 200;
+    // g2.drawRect(x, y, 200, 200);
+    // g2.setFont(new Font("Arial", Font.PLAIN, 30));
+    // g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+    // RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+    // g2.drawString("NEXT", x + 60, y + 35);
+
+    // g2.drawRect(x, top_y, 250, 250);
+    // x += 30;
+    // y = top_y + 65;
+    // g2.drawString("LEVEL: " + level, x, y);
+    // g2.drawString("SCORE: " + score, x, y + 70);
+    // g2.drawString("LINE: " + line, x, y + 140);
+
+    // if (currentBrick != null) {
+    // currentBrick.draw(g2);
+    // }
+
+    // nextBrick.draw(g2);
+    // for (int i = 0; i < staticBlocks.size(); i++) {
+    // staticBlocks.get(i).draw(g2);
+    // }
+
+    // if (effectCounterOn) {
+    // effectCounter++;
+    // g2.setColor(Color.red);
+    // for (int i = 0; i < effectY.size(); i++) {
+    // g2.fillRect(left_x, effectY.get(i), width, Block.size);
+    // }
+    // if (effectCounter == 10) {
+    // effectCounterOn = false;
+    // effectCounter = 0;
+    // effectY.clear();
+    // }
+    // }
+    // // Draw obstacle blocks
+    // for (Block_Obstacle obstacle : debuffManager.obstacleBlocks) {
+    // obstacle.draw(g2);
+    // }
+
+    // g2.setColor(Color.yellow);
+    // g2.setFont(g2.getFont().deriveFont(50f));
+
+    // if (gameOver) {
+    // x = left_x + 25;
+    // y = top_y + 320;
+    // g2.drawString("GAME OVER", x, y);
+    // } else if (KeyHandle.pausePressed) {
+    // x = left_x + 70;
+    // y = top_y + 320;
+    // g2.drawString("PAUSED", x, y);
+    // }
+
+    // x = 35;
+    // y = top_y + 320;
+    // g2.setColor(Color.white);
+    // g2.setFont(new Font("Time New Roman", Font.PLAIN, 60));
+    // g2.drawString("Simple Tetris", x + 20, y);
+    // }
+
     public void draw(Graphics2D g2) {
-        g2.setColor(Color.white);
+        // Set rendering hints for better text quality
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+        // Draw background
+        g2.setColor(COLOR_WINDOW);
+        g2.fillRect(0, 0, GamePanel.width, GamePanel.height);
+
+        // Draw playfield border
+        g2.setColor(COLOR_BORDER);
         g2.setStroke(new BasicStroke(4f));
         g2.drawRect(left_x - 4, top_y - 4, width + 8, height + 8);
 
+        // Draw playfield background
+        // g2.setColor(COLOR_BACKGROUND);
+        g2.fillRect(left_x, top_y, width, height);
+
+        // Draw next brick frame
         int x = right_x + 100;
         int y = bottom_y - 200;
+        g2.setColor(COLOR_BORDER);
         g2.drawRect(x, y, 200, 200);
-        g2.setFont(new Font("Arial", Font.PLAIN, 30));
-        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        g2.drawString("NEXT", x + 60, y + 35);
+        // Draw title background
+        g2.setColor(COLOR_BORDER);
+        g2.fillRect(x, y, 200, 50);
+        // Draw the divider
+        g2.setColor(COLOR_BORDER);
+        g2.drawLine(x, y + 50, x + 200, y + 50);
+        // Draw the "NEXT" title
+        g2.setFont(font2);
+        g2.setColor(Color.WHITE);
+        g2.drawString("NEXT", x + 65, y + 35);
 
-        g2.drawRect(x, top_y, 250, 250);
+        // Draw score frame
+        g2.setColor(COLOR_BORDER);
+        g2.drawRect(right_x + 100, top_y, 250, 250);
         x += 30;
         y = top_y + 65;
-        g2.drawString("LEVEL: " + level, x, y);
-        g2.drawString("SCORE: " + score, x, y + 70);
-        g2.drawString("LINE: " + line, x, y + 140);
+        // Draw title background
+        g2.setColor(COLOR_BORDER);
+        g2.fillRect(right_x + 100, top_y, 250, 50);
+        // Draw the divider
+        g2.setColor(COLOR_BORDER);
+        g2.drawLine(right_x + 100, top_y + 50, right_x + 350, top_y + 50);
+        // Draw the "SCORE" title
+        g2.setFont(font2);
+        g2.setColor(Color.WHITE);
+        g2.drawString("SCORE", right_x + 180, y - 30);
+        // Draw the content
+        g2.setColor(COLOR_DARK);
+        g2.drawString("LEVEL: " + level, x, y + 50);
+        g2.drawString("SCORE: " + score, x, y + 100);
+        g2.drawString("LINE: " + line, x, y + 150);
 
+        // Draw obstacle blocks
+        for (Block_Obstacle obstacle : debuffManager.obstacleBlocks) {
+            obstacle.draw(g2);
+        }
+
+        // Draw current brick
         if (currentBrick != null) {
             currentBrick.draw(g2);
         }
 
+        // Draw next brick
         nextBrick.draw(g2);
+
+        // Draw static blocks
         for (int i = 0; i < staticBlocks.size(); i++) {
             staticBlocks.get(i).draw(g2);
         }
 
+        // Draw effects
         if (effectCounterOn) {
             effectCounter++;
             g2.setColor(Color.red);
@@ -220,28 +331,46 @@ public class PlayManager {
                 effectY.clear();
             }
         }
-        // Draw obstacle blocks
-        for (Block_Obstacle obstacle : debuffManager.obstacleBlocks) {
-            obstacle.draw(g2);
-        }
 
+        // Draw game over or paused message
+        g2.setFont(font3);
         g2.setColor(Color.yellow);
-        g2.setFont(g2.getFont().deriveFont(50f));
 
         if (gameOver) {
-            x = left_x + 25;
-            y = top_y + 320;
-            g2.drawString("GAME OVER", x, y);
+            // Draw game over
+            g2.setFont(fontPause); // Use larger font
+            String gameOverText = "GAME OVER";
+            int gameOverTextWidth = g2.getFontMetrics().stringWidth(gameOverText);
+            int gameOverTextX = left_x + (width - gameOverTextWidth) / 2;
+            int gameOverTextY = top_y + height / 2;
+            g2.setColor(Color.BLACK);
+            g2.drawString(gameOverText, gameOverTextX, gameOverTextY);
         } else if (KeyHandle.pausePressed) {
-            x = left_x + 70;
-            y = top_y + 320;
-            g2.drawString("PAUSED", x, y);
+            // Draw paused
+            g2.setFont(fontPause); // Use larger font
+            String pausedText = "PAUSED";
+            int pausedTextWidth = g2.getFontMetrics().stringWidth(pausedText);
+            int pausedTextX = left_x + (width - pausedTextWidth) / 2;
+            int pausedTextY = top_y + height / 2;
+            g2.drawString(pausedText, pausedTextX, pausedTextY);
         }
 
-        x = 35;
+        // Draw instructions
+        x = -5;
         y = top_y + 320;
-        g2.setColor(Color.white);
-        g2.setFont(new Font("Time New Roman", Font.PLAIN, 60));
-        g2.drawString("Simple Tetris", x + 20, y);
+        g2.setColor(COLOR_DARK);
+        g2.setFont(new Font("Times New Roman", Font.PLAIN, 60));
+        g2.drawString("Instructions", x + 20, y);
+
+        g2.setFont(fontInstructions);
+        y += 50;
+        g2.drawString("- Press A / D, Left / Right arrow: Move left / right.", x + 20, y);
+        y += 30;
+        g2.drawString("- Press W / Up arrow: Rotate the tetromino.", x + 20, y);
+        y += 30;
+        g2.drawString("- Spacebar: Pause the game.", x + 20, y);
+        y += 30;
+        g2.drawString("- Down arrow: Increase fall speed.", x + 20, y);
     }
+
 }
