@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import detail.Block;
+import detail.Block_Obstacle;
 import detail.Brick;
 import detail.Brick_Bar;
 import detail.Brick_L1;
@@ -26,7 +27,6 @@ public class PlayManager {
     public static int top_y;
     public static int bottom_y;
 
-    // brick
     Brick currentBrick;
     final int brick_start_x;
     final int brick_start_y;
@@ -36,17 +36,18 @@ public class PlayManager {
     public static ArrayList<Block> staticBlocks = new ArrayList<>();
 
     public static int dropInterval = 60;
+    int originalDropInterval = 60;
     boolean gameOver;
 
-    // effect
     boolean effectCounterOn;
     int effectCounter;
     ArrayList<Integer> effectY = new ArrayList<>();
 
-    // level and score
     int level = 1;
     int score;
     int line;
+
+    Debuff_Manager debuffManager;
 
     public PlayManager() {
         left_x = (GamePanel.width / 2) - (width / 2);
@@ -61,9 +62,10 @@ public class PlayManager {
         nextBrick = pickBrick();
         nextBrick.setXY(nextBrick_x, nextBrick_y);
 
-        // set the starting brick
         currentBrick = pickBrick();
         currentBrick.setXY(brick_start_x, brick_start_y);
+
+        debuffManager = new Debuff_Manager(this);
     }
 
     private Brick pickBrick() {
@@ -148,13 +150,12 @@ public class PlayManager {
     }
 
     public void update() {
-        if (currentBrick.active == false) {
+        if (!currentBrick.active) {
             staticBlocks.add(currentBrick.b[0]);
             staticBlocks.add(currentBrick.b[1]);
             staticBlocks.add(currentBrick.b[2]);
             staticBlocks.add(currentBrick.b[3]);
 
-            // if game over
             if (currentBrick.b[0].x == brick_start_x && currentBrick.b[0].y == brick_start_y) {
                 gameOver = true;
                 GamePanel.music.stop();
@@ -168,11 +169,15 @@ public class PlayManager {
             nextBrick = pickBrick();
             nextBrick.setXY(nextBrick_x, nextBrick_y);
 
+            // Reset dropInterval to original value when a new brick spawns
+            dropInterval = originalDropInterval;
+
             checkDelete();
+            debuffManager.handleObstacleCollision();
         } else {
             currentBrick.update();
+            debuffManager.handleObstacleCollision();
         }
-
     }
 
     public void draw(Graphics2D g2) {
@@ -180,7 +185,6 @@ public class PlayManager {
         g2.setStroke(new BasicStroke(4f));
         g2.drawRect(left_x - 4, top_y - 4, width + 8, height + 8);
 
-        // mini frame
         int x = right_x + 100;
         int y = bottom_y - 200;
         g2.drawRect(x, y, 200, 200);
@@ -188,7 +192,6 @@ public class PlayManager {
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.drawString("NEXT", x + 60, y + 35);
 
-        // score frame
         g2.drawRect(x, top_y, 250, 250);
         x += 30;
         y = top_y + 65;
@@ -205,7 +208,6 @@ public class PlayManager {
             staticBlocks.get(i).draw(g2);
         }
 
-        // draw effect
         if (effectCounterOn) {
             effectCounter++;
             g2.setColor(Color.red);
@@ -218,23 +220,24 @@ public class PlayManager {
                 effectY.clear();
             }
         }
+        // Draw obstacle blocks
+        for (Block_Obstacle obstacle : debuffManager.obstacleBlocks) {
+            obstacle.draw(g2);
+        }
 
         g2.setColor(Color.yellow);
         g2.setFont(g2.getFont().deriveFont(50f));
 
         if (gameOver) {
-            // draw game over
             x = left_x + 25;
             y = top_y + 320;
             g2.drawString("GAME OVER", x, y);
         } else if (KeyHandle.pausePressed) {
-            // draw paused
             x = left_x + 70;
             y = top_y + 320;
             g2.drawString("PAUSED", x, y);
         }
 
-        // draw game title
         x = 35;
         y = top_y + 320;
         g2.setColor(Color.white);
