@@ -15,7 +15,7 @@ public class Debuff_Manager {
     }
 
     public void generateObstacles() {
-        int numObstacles = new Random().nextInt(3) + 1; // Random number of obstacles between 1 and 3
+        int numObstacles = new Random().nextInt(5) + 1; // Random number of obstacles between 1 and 3
         for (int i = 0; i < numObstacles; i++) {
             Block_Obstacle obstacle = new Block_Obstacle();
             int x, y;
@@ -66,14 +66,25 @@ public class Debuff_Manager {
     }
 
     private void applySpeedBuff() {
-        if (playManager.dropInterval > 50) {
-            playManager.dropInterval -= 20; // Decrease dropInterval by 10
-        } else if (playManager.dropInterval >= 30) {
-            playManager.dropInterval -= 7; // Decrease dropInterval by 7
-        } else if (playManager.dropInterval >= 10) {
-            playManager.dropInterval -= 5; // Decrease dropInterval by 5
+        final int MIN_DROP_INTERVAL = 10;
+
+        if (playManager.dropInterval > MIN_DROP_INTERVAL) {
+            if (playManager.level <= 2) {
+                playManager.dropInterval -= 20; // Decrease dropInterval by 20
+            } else if (playManager.level >= 3 && playManager.level <= 5) {
+                playManager.dropInterval -= 10; // Decrease dropInterval by 7
+            } else if (playManager.level >= 6 && playManager.level <= 7) {
+                playManager.dropInterval -= 7; // Decrease dropInterval by 5
+            } else {
+                playManager.dropInterval -= 2; // Decrease dropInterval by 2
+            }
+
+            // Ensure dropInterval does not fall below the minimum threshold
+            if (playManager.dropInterval < MIN_DROP_INTERVAL) {
+                playManager.dropInterval = MIN_DROP_INTERVAL;
+            }
         } else {
-            playManager.dropInterval -= 2; // Decrease dropInterval by 2
+            playManager.dropInterval = MIN_DROP_INTERVAL;
         }
     }
 
