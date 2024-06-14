@@ -3,8 +3,12 @@ package main;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -49,6 +53,41 @@ public class PlayManager {
 
     Debuff_Manager debuffManager;
 
+    public static final Color[] COLOR_BLOC_LISTE = {
+            Color.decode("0x3A86FF"), Color.decode("0x8338EC"), Color.decode("0xFF006E"),
+            Color.decode("0xFB5607"), Color.decode("0xFFBE0B"), Color.decode("0x60E9FF"), Color.decode("0x00DD7E")
+    };
+
+    public static final Color COLOR_BACKGROUND = Color.decode("0xDBEDFF");
+    public static final Color COLOR_WINDOW = Color.decode("0xD1E3F5");
+    public static final Color COLOR_BORDER = Color.decode("0x8AA7C2");
+    public static final Color COLOR_DARK = Color.decode("0x253F60");
+    public static final Color COLOR_SHADOW = Color.decode("0x597598");
+
+    public static Font font1 = new Font("Zorque", Font.PLAIN, 15);
+    public static Font font2 = new Font("Zorque", Font.BOLD, 25);
+    public static Font font3 = new Font("Zorque", Font.PLAIN, 26);
+    public static Font fontPause = new Font("Zorque", Font.BOLD, 50);
+    public static Font fontInstructions = new Font("Zorque", Font.PLAIN, 20);
+
+    static {
+        try {
+            font1 = Font.createFont(Font.PLAIN, new File("Fonts\\zorque.regular.ttf")).deriveFont(15f);
+            font2 = Font.createFont(Font.PLAIN, new File("Fonts\\zorque.regular.ttf")).deriveFont(25f);
+            font3 = Font.createFont(Font.PLAIN, new File("Fonts\\zorque.regular.ttf")).deriveFont(26f);
+            fontPause = Font.createFont(Font.PLAIN, new File("Fonts\\zorque.regular.ttf")).deriveFont(50f);
+            fontInstructions = Font.createFont(Font.PLAIN, new File("Fonts\\zorque.regular.ttf")).deriveFont(20f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(font1);
+            ge.registerFont(font2);
+            ge.registerFont(font3);
+            ge.registerFont(fontPause);
+            ge.registerFont(fontInstructions);
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+        }
+    }
+
     public PlayManager() {
         left_x = (GamePanel.width / 2) - (width / 2);
         right_x = left_x + width;
@@ -59,12 +98,32 @@ public class PlayManager {
 
         nextBrick_x = right_x + 175;
         nextBrick_y = top_y + 500;
+        // nextBrick = pickBrick();
+        // nextBrick.setXY(nextBrick_x, nextBrick_y);
+
+        // currentBrick = pickBrick();
+        // currentBrick.setXY(brick_start_x, brick_start_y);
+
+        // debuffManager = new Debuff_Manager(this);
+        initializeGame();
+    }
+
+    private void initializeGame() {
         nextBrick = pickBrick();
         nextBrick.setXY(nextBrick_x, nextBrick_y);
 
         currentBrick = pickBrick();
         currentBrick.setXY(brick_start_x, brick_start_y);
 
+        staticBlocks.clear();
+        dropInterval = originalDropInterval;
+        gameOver = false;
+        effectCounterOn = false;
+        effectCounter = 0;
+        effectY.clear();
+        level = 1;
+        score = 0;
+        line = 0;
         debuffManager = new Debuff_Manager(this);
     }
 
@@ -178,73 +237,11 @@ public class PlayManager {
             currentBrick.update();
             debuffManager.handleObstacleCollision();
         }
+        if (KeyHandle.resetPressed) {
+            initializeGame();
+            KeyHandle.resetPressed = false;
+        }
     }
-
-    // public void draw(Graphics2D g2) {
-    // g2.setColor(Color.white);
-    // g2.setStroke(new BasicStroke(4f));
-    // g2.drawRect(left_x - 4, top_y - 4, width + 8, height + 8);
-
-    // int x = right_x + 100;
-    // int y = bottom_y - 200;
-    // g2.drawRect(x, y, 200, 200);
-    // g2.setFont(new Font("Arial", Font.PLAIN, 30));
-    // g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-    // RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-    // g2.drawString("NEXT", x + 60, y + 35);
-
-    // g2.drawRect(x, top_y, 250, 250);
-    // x += 30;
-    // y = top_y + 65;
-    // g2.drawString("LEVEL: " + level, x, y);
-    // g2.drawString("SCORE: " + score, x, y + 70);
-    // g2.drawString("LINE: " + line, x, y + 140);
-
-    // if (currentBrick != null) {
-    // currentBrick.draw(g2);
-    // }
-
-    // nextBrick.draw(g2);
-    // for (int i = 0; i < staticBlocks.size(); i++) {
-    // staticBlocks.get(i).draw(g2);
-    // }
-
-    // if (effectCounterOn) {
-    // effectCounter++;
-    // g2.setColor(Color.red);
-    // for (int i = 0; i < effectY.size(); i++) {
-    // g2.fillRect(left_x, effectY.get(i), width, Block.size);
-    // }
-    // if (effectCounter == 10) {
-    // effectCounterOn = false;
-    // effectCounter = 0;
-    // effectY.clear();
-    // }
-    // }
-    // // Draw obstacle blocks
-    // for (Block_Obstacle obstacle : debuffManager.obstacleBlocks) {
-    // obstacle.draw(g2);
-    // }
-
-    // g2.setColor(Color.yellow);
-    // g2.setFont(g2.getFont().deriveFont(50f));
-
-    // if (gameOver) {
-    // x = left_x + 25;
-    // y = top_y + 320;
-    // g2.drawString("GAME OVER", x, y);
-    // } else if (KeyHandle.pausePressed) {
-    // x = left_x + 70;
-    // y = top_y + 320;
-    // g2.drawString("PAUSED", x, y);
-    // }
-
-    // x = 35;
-    // y = top_y + 320;
-    // g2.setColor(Color.white);
-    // g2.setFont(new Font("Time New Roman", Font.PLAIN, 60));
-    // g2.drawString("Simple Tetris", x + 20, y);
-    // }
 
     public void draw(Graphics2D g2) {
         // Set rendering hints for better text quality
