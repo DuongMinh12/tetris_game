@@ -33,7 +33,10 @@ public class PlayManager {
     public static ArrayList<Block> staticBlocks = new ArrayList<>();
 
     public static int dropInterval = 60;
+    static int gameDifficulty = 1;
     int originalDropInterval = 60;
+    int easyDropInterval = 120;
+    int hardDropInterval = 10;
     boolean gameOver;
 
     boolean effectCounterOn;
@@ -61,7 +64,7 @@ public class PlayManager {
         drawing = new Drawing(this);
     }
 
-    private void initializeGame() {
+    public void initializeGame() {
         nextBrick = pickBrick();
         nextBrick.setXY(nextBrick_x, nextBrick_y);
 
@@ -69,7 +72,15 @@ public class PlayManager {
         currentBrick.setXY(brick_start_x, brick_start_y);
 
         staticBlocks.clear();
-        dropInterval = originalDropInterval;
+        //dropInterval = originalDropInterval;
+
+        if(gameDifficulty==1)
+            dropInterval = originalDropInterval;
+        else if(gameDifficulty==2)
+            dropInterval = easyDropInterval;
+        else if(gameDifficulty==3)
+            dropInterval = hardDropInterval;
+
         gameOver = false;
         effectCounterOn = false;
         effectCounter = 0;
@@ -182,7 +193,7 @@ public class PlayManager {
             nextBrick.setXY(nextBrick_x, nextBrick_y);
 
             // Reset dropInterval to original value when a new brick spawns
-            dropInterval = originalDropInterval;
+            //dropInterval = originalDropInterval;
 
             checkDelete();
             debuffManager.handleObstacleCollision();
@@ -201,6 +212,10 @@ public class PlayManager {
             initializeGame();
             // }
         }
+    }
+
+    public void setGameDifficulty(int difficulty) {
+        gameDifficulty = difficulty;
     }
 
     public void draw(Graphics2D g2) {

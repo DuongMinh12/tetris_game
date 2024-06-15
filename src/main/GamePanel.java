@@ -32,6 +32,25 @@ public class GamePanel extends JPanel implements Runnable {
         music.loop();
     }
 
+    public void restartGame(){
+        pm.initializeGame();
+    }
+
+    public void beginHard(){
+        pm.setGameDifficulty(3);
+        pm.initializeGame();
+    }
+
+    public void beginEasy(){
+        pm.setGameDifficulty(2);
+        pm.initializeGame();
+    }
+
+    public void beginNormal(){
+        pm.setGameDifficulty(1);
+        pm.initializeGame();
+    }
+
     @Override
     public void run() {
         double drawInterval = 1000000000 / FPS;
