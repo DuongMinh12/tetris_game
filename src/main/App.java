@@ -9,6 +9,7 @@ public class App {
         window.setResizable(false);
 
         // add panel to the window
+        // add challenge branch
         GamePanel gp = new GamePanel();
         window.add(gp);
         window.pack();
