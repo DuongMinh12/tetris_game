@@ -11,11 +11,16 @@ public class Debuff_Manager {
 
     public Debuff_Manager(PlayManager playManager) {
         this.playManager = playManager;
-        generateObstacles();
+        if (playManager.gameDifficulty == 3) {
+            generateObstacles();
+        } else {
+            return;
+        }
+
     }
 
     public void generateObstacles() {
-        int numObstacles = new Random().nextInt(5) + 1; // Random number of obstacles between 1 and 3
+        int numObstacles = new Random().nextInt(4) + 1;
         for (int i = 0; i < numObstacles; i++) {
             Block_Obstacle obstacle = new Block_Obstacle();
             int x, y;
@@ -36,12 +41,10 @@ public class Debuff_Manager {
     }
 
     private boolean isValidObstaclePosition(int x, int y) {
-        // Ensure obstacle does not appear at the top or bottom of the playing screen
         if (y <= playManager.top_y + 2 * Block.size || y >= playManager.bottom_y - 2 * Block.size) {
             return false;
         }
 
-        // Ensure obstacle is not next to or too close to the tetromino
         for (Block b : playManager.currentBrick.b) {
             if (Math.abs(b.x - x) <= 2 * Block.size && Math.abs(b.y - y) <= 2 * Block.size) {
                 return false;
@@ -70,16 +73,15 @@ public class Debuff_Manager {
 
         if (playManager.dropInterval > MIN_DROP_INTERVAL) {
             if (playManager.level <= 2) {
-                playManager.dropInterval -= 20; // Decrease dropInterval by 20
+                playManager.dropInterval -= 20;
             } else if (playManager.level >= 3 && playManager.level <= 5) {
-                playManager.dropInterval -= 10; // Decrease dropInterval by 7
+                playManager.dropInterval -= 10;
             } else if (playManager.level >= 6 && playManager.level <= 7) {
-                playManager.dropInterval -= 7; // Decrease dropInterval by 5
+                playManager.dropInterval -= 7;
             } else {
-                playManager.dropInterval -= 2; // Decrease dropInterval by 2
+                playManager.dropInterval -= 2;
             }
 
-            // Ensure dropInterval does not fall below the minimum threshold
             if (playManager.dropInterval < MIN_DROP_INTERVAL) {
                 playManager.dropInterval = MIN_DROP_INTERVAL;
             }

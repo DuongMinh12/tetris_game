@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javax.swing.JOptionPane;
+// import javax.swing.JOptionPane;
 
 import detail.Block;
 import detail.Brick;
@@ -35,8 +35,8 @@ public class PlayManager {
     public static int dropInterval = 60;
     static int gameDifficulty = 1;
     int originalDropInterval = 60;
-    int easyDropInterval = 120;
-    int hardDropInterval = 10;
+    int easyDropInterval = 80;
+    int hardDropInterval = 50;
     boolean gameOver;
 
     boolean effectCounterOn;
@@ -72,13 +72,13 @@ public class PlayManager {
         currentBrick.setXY(brick_start_x, brick_start_y);
 
         staticBlocks.clear();
-        //dropInterval = originalDropInterval;
+        // dropInterval = originalDropInterval;
 
-        if(gameDifficulty==1)
+        if (gameDifficulty == 1)
             dropInterval = originalDropInterval;
-        else if(gameDifficulty==2)
+        else if (gameDifficulty == 2)
             dropInterval = easyDropInterval;
-        else if(gameDifficulty==3)
+        else if (gameDifficulty == 3)
             dropInterval = hardDropInterval;
 
         gameOver = false;
@@ -193,7 +193,7 @@ public class PlayManager {
             nextBrick.setXY(nextBrick_x, nextBrick_y);
 
             // Reset dropInterval to original value when a new brick spawns
-            //dropInterval = originalDropInterval;
+            dropInterval = originalDropInterval;
 
             checkDelete();
             debuffManager.handleObstacleCollision();
