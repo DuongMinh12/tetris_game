@@ -9,6 +9,7 @@ public class CreateWindow implements ActionListener {
     JMenu menu, submenu;
     JMenuItem i1, i2, i3, i4, i5, i6;
     JMenuBar mb = new JMenuBar();
+
     CreateWindow() {
         window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -23,7 +24,7 @@ public class CreateWindow implements ActionListener {
         window.setVisible(true);
         gp.launchGame();
 
-        //create menu
+        // create menu
         JMenu menu, submenu, submenu2;
         JMenuItem i1, i2, i3, i4, i5, i6, i7, i8;
         JMenuBar mb = new JMenuBar();
@@ -38,7 +39,6 @@ public class CreateWindow implements ActionListener {
         submenu2 = new JMenu("Music");
         i7 = new JMenuItem("Play");
         i8 = new JMenuItem("Pause");
-
 
         menu.add(i1);
         menu.add(i2);

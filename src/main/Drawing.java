@@ -139,8 +139,10 @@ public class Drawing {
         y += 30;
         g2.drawString("- Press W / Up arrow: Rotate the tetromino.", x + 20, y);
         y += 30;
+        g2.drawString("- Press S / Down arrow: Increase fall speed.", x + 20, y);
+        y += 30;
         g2.drawString("- Spacebar: Pause the game.", x + 20, y);
         y += 30;
-        g2.drawString("- Down arrow: Increase fall speed.", x + 20, y);
+        g2.drawString("- Press R: ReStart game.", x + 20, y);
     }
 }
